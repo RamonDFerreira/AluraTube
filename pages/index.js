@@ -1,20 +1,34 @@
 import config from "../config.json";
 import styled from "styled-components";
-import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { videoService } from "../src/services/videoService";
 
-function HomePage() {
-    const estilosDaHomePage = {
-        // backgroundColor: "red" 
-    };
-
+export default function HomePage() {
+    const service = videoService()
     const [valorDoFiltro, setValorDoFiltro] = useState('');
+    const [playlists, setPlaylists] = useState({}) 
+
+    useEffect(() => {
+        service.getAllVideos()
+            .then((dados) => {
+            const novasPlayslists = { ...playlists }
+            dados.data.map((video) => {
+              if (!novasPlayslists[video.playlist]) {
+                novasPlayslists[video.playlist] = []
+              }
+              novasPlayslists[video.playlist].push(video)
+            })
+            setPlaylists(novasPlayslists)
+          })
+        
+    }, [])
+    
 
     return (
         <>
-            <CSSReset />
+            
             <div style={{
                 display: "flex",
                 flexDirection: "column",
@@ -23,7 +37,7 @@ function HomePage() {
             }}>
                 <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
                 <Header />
-                <Timeline searchValue={valorDoFiltro} playlists={config.playlists}>
+                <Timeline searchValue={valorDoFiltro} playlists={playlists}>
                     Conteúdo
                 </Timeline>
             </div>
@@ -31,25 +45,14 @@ function HomePage() {
     );
 }
 
-export default HomePage
-
-// function Menu() {
-//     return (
-//         <div>
-//             Menu
-//         </div>
-//     )
-// }
-
-
 const StyledHeader = styled.div`
+    background-color: ${({ theme }) => theme.backgroundLevel1 };
     img {
         width: 80px;
         height: 80px;
         border-radius: 50%;
-    }
+    };
     .user-info {
-        margin-top: 50px;
         display: flex;
         align-items: center;
         width: 100%;
@@ -57,9 +60,18 @@ const StyledHeader = styled.div`
         gap: 16px;
     }
 `;
+
+const StyledBanner = styled.div`
+    background-color: gray;
+    background-image: url(${({bg}) => bg});
+    height: 230px;
+
+`;
+
 function Header() {
     return (
         <StyledHeader>
+            <StyledBanner bg={config.bg} />
             {/* <img src="banner" /> */}
             <section className="user-info">
                 <img src={`https://github.com/${config.github}.png`} />
@@ -85,10 +97,8 @@ function Timeline({searchValue, ...propriedades}) {
         <StyledTimeline>
             {playlistNames.map((playlistName) => {
                 const videos = propriedades.playlists[playlistName];
-                console.log(playlistName);
-                console.log(videos);
                 return (
-                    <section>
+                    <section key={playlistName}>
                         <h2>{playlistName}</h2>
                         <div>
                             {videos.filter((video) => {
@@ -97,7 +107,7 @@ function Timeline({searchValue, ...propriedades}) {
                                 return titleNormalized.includes(searchValueNormalized)
                             }).map((video) => {
                                 return (
-                                    <a href={video.url}>
+                                    <a key={video.url} href={video.url}>
                                         <img src={video.thumb} />
                                         <span>
                                             {video.title}

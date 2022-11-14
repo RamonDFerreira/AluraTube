@@ -33,12 +33,22 @@ export const StyledTimeline = styled.div`
       grid-auto-columns: minmax(200px,1fr);
       overflow-x: scroll;
       scroll-snap-type: x mandatory;
+      ::-webkit-scrollbar{
+        height: 8px;
+        width: 4px;
+        background: lightgray;
+      };
+      ::-webkit-scrollbar-thumb:horizontal{
+          background: gray;
+
+      };
       a {
         scroll-snap-align: start;
         span {
           padding-top: 8px;
           display: block;
           padding-right: 24px;
+          margin-bottom: 8px;
           color: ${({ theme }) => theme.textColorBase || "#222222"};
         }
       }
