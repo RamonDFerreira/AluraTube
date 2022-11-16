@@ -1,39 +1,31 @@
 import React from "react";
 import { videoService } from "../../services/videoService";
 import { StyledRegisterVideo } from "./styles";
+import { useForm } from "react-hook-form";
 
 // Whiteboarding
 // Custom Hook
-function useForm(propsDoForm) {
-    const [values, setValues] = React.useState(propsDoForm.initialValues);
-
-    return {
-        values,
-        handleChange: (evento) => {
-            console.log(evento.target);
-            const value = evento.target.value;
-            const name = evento.target.name
-            setValues({
-                ...values,
-                [name]: value,
-            });
-        },
-        clearForm() {
-            setValues({});
-        }
-    };
-}
-
-
-
 
 export default function RegisterVideo() {
-    const formCadastro = useForm({
-        initialValues: { titulo: "", url: "", playlist: "" }
+    const { 
+        register, 
+        handleSubmit, 
+        reset,
+        formState: { errors, isSubmitSuccessful } 
+    } = useForm({
+        defaultValues: {
+            titulo: "",
+            url: "",
+            playlist: ""
+        }
     });
+
+    React.useEffect(() => {
+        reset({})
+    }, [isSubmitSuccessful])
+      
     const [formVisivel, setFormVisivel] = React.useState(false);
     const service = videoService();
-   
 
     return (
         <StyledRegisterVideo>
@@ -43,49 +35,56 @@ export default function RegisterVideo() {
             {/* Ternário */}
             {/* Operadores de Curto-circuito */}
             {formVisivel && (
-                    <form onSubmit={(evento) => {
-                        evento.preventDefault();
-                        console.log(formCadastro.values);
-
-                        service.insertVideo(formCadastro.values.titulo, formCadastro.values.url, formCadastro.values.playlist)
+                <form onSubmit={handleSubmit((data) => {
+   
+                    console.log(data)
+                    service.insertVideo(data.titulo, data.url, data.playlist)
                         .then((data) => {
                             console.log(data)
                         })
-                        .catch ((error) => {
+                        .catch((error) => {
                             console.log(error)
                         })
 
-                        setFormVisivel(false);
-                        formCadastro.clearForm();
-                    }}>
-                        <div>
-                            <button type="button" className="close-modal" onClick={() => setFormVisivel(false)}>
-                                X
-                            </button>
-                            <input
-                                placeholder="Titulo do vídeo"
-                                name="titulo"
-                                value={formCadastro.values.titulo}
-                                onChange={formCadastro.handleChange}
-                            />
-                            <input
-                                placeholder="URL"
-                                name="url"
-                                value={formCadastro.values.url}
-                                onChange={formCadastro.handleChange}
-                            />
-                            <input
-                                placeholder="Playlist do Vídeo"
-                                name="playlist"
-                                value={formCadastro.values.playlist}
-                                onChange={formCadastro.handleChange}
-                            />
-                            <button type="submit">
-                                Cadastrar
-                            </button>
-                        </div>
-                    </form>
-                )}
+                    setFormVisivel(false);
+                })}>
+                    <div>
+                        <button type="button" className="close-modal" onClick={() => setFormVisivel(false)}>
+                            X
+                        </button>
+                        <input
+                            placeholder="Titulo do vídeo"
+                            {...register(
+                                "titulo",
+                                { required: 'Favor informar o título do vídeo.' }
+                            )
+                            }
+                        />
+                        <p>{errors.titulo?.message}</p>
+                        <input
+                            placeholder="URL"
+                            {...register(
+                                "url",
+                                { required: 'Favor informar a URL do vídeo.' }
+                            )
+                            }
+                        />
+                        <p>{errors.url?.message}</p>
+                        <input
+                            placeholder="Playlist do Vídeo"
+                            {...register(
+                                "playlist",
+                                { required: 'Favor informar a qual playlist deseja adicionar o vídeo.' }
+                            )
+                            }
+                        />
+                        <p>{errors.playlist?.message}</p>
+                        <button type="submit">
+                            Cadastrar
+                        </button>
+                    </div>
+                </form>
+            )}
         </StyledRegisterVideo>
     )
 }

@@ -36,7 +36,7 @@ export const StyledTimeline = styled.div`
       ::-webkit-scrollbar{
         height: 8px;
         width: 4px;
-        background: lightgray;
+        background: transparent;
       };
       ::-webkit-scrollbar-thumb:horizontal{
           background: gray;
