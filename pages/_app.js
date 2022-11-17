@@ -1,4 +1,5 @@
 import React from "react";
+import {SessionProvider} from 'next-auth/react'
 import { ThemeProvider } from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import ColorModeProvider, { ColorModeContext } from "../src/components/Menu/components/ColorMode";
@@ -44,10 +45,12 @@ function MyApp({ Component, pageProps }) {
     )
 }
 
-export default function _App(props) {
+export default function _App(props, session) {
     return (
-        <ProviderWrapper>
-            <MyApp {...props} />
-        </ProviderWrapper>
+        <SessionProvider session={session}>
+            <ProviderWrapper>
+                <MyApp {...props} />
+            </ProviderWrapper>
+        </SessionProvider>
     )
 };

@@ -4,6 +4,7 @@ import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 import { useState, useEffect } from "react";
 import { videoService } from "../src/services/videoService";
+import IndexPage from "../src/components/Head";
 
 export default function HomePage() {
     const service = videoService()
@@ -28,7 +29,7 @@ export default function HomePage() {
 
     return (
         <>
-            
+            <IndexPage />
             <div style={{
                 display: "flex",
                 flexDirection: "column",
