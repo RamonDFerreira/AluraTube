@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components"
 
 const StyledSearch = styled.div`
@@ -35,7 +34,6 @@ const StyledSearch = styled.div`
 `;
 
 export default function Search({ valorDoFiltro, setValorDoFiltro }) {
-
 
     return (
         <StyledSearch>

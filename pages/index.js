@@ -5,6 +5,7 @@ import { StyledTimeline } from "../src/components/Timeline";
 import { useState, useEffect } from "react";
 import { videoService } from "../src/services/videoService";
 import IndexPage from "../src/components/Head";
+import { getSession, useSession } from 'next-auth/react'
 
 export default function HomePage() {
     const service = videoService()
@@ -27,23 +28,27 @@ export default function HomePage() {
     }, [])
     
 
-    return (
-        <>
-            <IndexPage />
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-                // backgroundColor: "red",
-            }}>
-                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
-                <Header />
-                <Timeline searchValue={valorDoFiltro} playlists={playlists}>
-                    Conteúdo
-                </Timeline>
-            </div>
-        </>
-    );
+    const {data: session} = useSession()
+
+    if(session) {
+        return (
+            <>
+                <IndexPage />
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    flex: 1,
+                    // backgroundColor: "red",
+                }}>
+                    <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
+                    <Header />
+                    <Timeline searchValue={valorDoFiltro} playlists={playlists}>
+                        Conteúdo
+                    </Timeline>
+                </div>
+            </>
+        );
+    }     
 }
 
 const StyledHeader = styled.div`
@@ -122,4 +127,19 @@ function Timeline({searchValue, ...propriedades}) {
             })}
         </StyledTimeline>
     )
+}
+
+export const getServerSideProps = async (context) => {
+    const session = await getSession(context)
+    
+    if(!session) {
+        return {
+            redirect: {
+                destination: '/login'
+            }
+        }
+    }
+    return {
+        props: {session},
+    }
 }
