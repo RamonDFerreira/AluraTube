@@ -54,13 +54,17 @@ export const StyledRegisterVideo = styled.div`
       position: relative;
       padding: 16px;
       padding-top: 40px;
+
+      & > span {
+        margin-bottom: 5px;
+      }
     }
   }
   input {
     border-radius: 2px;
     border: 1px solid ${({ theme }) => theme.borderBase};
     padding: 8px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     outline: none;
     color: #222222;
     background-color: #f9f9f9;

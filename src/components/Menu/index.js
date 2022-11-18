@@ -25,6 +25,14 @@ const StyledMenu = styled.header`
       fill: ${({ theme }) => theme.textColorBase || "#222222"};
     }
   }
+
+  .rightMenu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+
 `;
 
 export default function Menu({ valorDoFiltro, setValorDoFiltro }) {
@@ -34,8 +42,10 @@ export default function Menu({ valorDoFiltro, setValorDoFiltro }) {
         <Logo />
       </div>
       <Search valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
-      <Logout />
-      <DarkModeSwitch />
+      <div className="rightMenu">
+        <DarkModeSwitch />
+        <Logout />
+      </div>
     </StyledMenu>
   );
 }

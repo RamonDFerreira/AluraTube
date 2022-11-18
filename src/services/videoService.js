@@ -13,7 +13,13 @@ export function videoService() {
   return {
     getAllVideos() {
       return supabase.from("video")
-        .select("*")        
+        .select("*")       
+    },
+
+    getUserVideos() {
+      return supabase.from("video")
+        .select("*") 
+        .filter("userId", "is", null)       
     },
 
     insertVideo(title, url, playlist){

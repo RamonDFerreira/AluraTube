@@ -2,6 +2,7 @@ import React from "react";
 import { videoService } from "../../services/videoService";
 import { StyledRegisterVideo } from "./styles";
 import { useForm } from "react-hook-form";
+import { Alert } from "@mui/material";
 
 // Whiteboarding
 // Custom Hook
@@ -56,29 +57,29 @@ export default function RegisterVideo() {
                             placeholder="Titulo do vídeo"
                             {...register(
                                 "titulo",
-                                { required: 'Favor informar o título do vídeo.' }
+                                { required: <Alert severity="error">Favor informar o titulo do vídeo.</Alert> }
                             )
                             }
                         />
-                        <p>{errors.titulo?.message}</p>
+                        <span>{errors.titulo?.message}</span>
                         <input
                             placeholder="URL"
                             {...register(
                                 "url",
-                                { required: 'Favor informar a URL do vídeo.' }
+                                { required: <Alert severity="error">Favor informar a URL do vídeo.</Alert>}
                             )
                             }
                         />
-                        <p>{errors.url?.message}</p>
+                        <span>{errors.url?.message}</span>
                         <input
                             placeholder="Playlist do Vídeo"
                             {...register(
                                 "playlist",
-                                { required: 'Favor informar a qual playlist deseja adicionar o vídeo.' }
+                                { required: <Alert severity="error">Favor informar a qual playlist deseja adicionar o vídeo.</Alert>}
                             )
                             }
                         />
-                        <p>{errors.playlist?.message}</p>
+                        <span>{errors.playlist?.message}</span>
                         <button type="submit">
                             Cadastrar
                         </button>

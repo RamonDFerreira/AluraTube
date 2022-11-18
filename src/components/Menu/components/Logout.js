@@ -1,4 +1,5 @@
 import { signOut } from "next-auth/react"
+import { IoLogOutOutline } from "react-icons/io5"
 
 export default function Logout() {
 
@@ -7,6 +8,7 @@ export default function Logout() {
     }
 
     return (
-        <button onClick={handleGoogleLogout}>Logout</button> 
+        
+        <IoLogOutOutline onClick={handleGoogleLogout}>Logout</IoLogOutOutline> 
     )
 }
