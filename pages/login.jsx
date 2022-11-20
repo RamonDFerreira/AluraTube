@@ -5,7 +5,7 @@ const login = () => {
     const {data: session} = useSession()
 
     async function handleGoogleSignIn(){
-        signIn('google', {callbackUrl: "http://localhost:3000"})       
+        signIn('google', {callbackUrl: process.env.NEXTAUTH_URL})       
     }
 
     if(session) {
