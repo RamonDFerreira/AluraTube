@@ -11,8 +11,8 @@ export default function HomePage() {
     const [valorDoFiltro, setValorDoFiltro] = useState('');
     const [playlists, setPlaylists] = useState({}) 
 
-    useEffect(() => {
-        service.getUserVideos(session.user?.email)
+    useEffect(async () => {
+        await service.getUserVideos(session.user?.email)
             .then((dados) => {
             const novasPlayslists = { ...playlists }
             dados.data.map((video) => {
