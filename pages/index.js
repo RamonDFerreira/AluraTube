@@ -12,7 +12,7 @@ export default function HomePage() {
     const [playlists, setPlaylists] = useState({}) 
 
     useEffect(() => {
-        service.getAllVideos()
+        service.getUserVideos(session.user?.email)
             .then((dados) => {
             const novasPlayslists = { ...playlists }
             dados.data.map((video) => {

@@ -3,10 +3,9 @@ import {useSession, signIn, signOut, getSession} from 'next-auth/react'
 
 const login = () => {
     const {data: session} = useSession()
-    console.log(session)
 
     async function handleGoogleSignIn(){
-        signIn('google', {callbackUrl: "http://localhost:3000"})
+        signIn('google', {callbackUrl: "http://localhost:3000"})       
     }
 
     if(session) {

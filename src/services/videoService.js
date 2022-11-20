@@ -16,18 +16,20 @@ export function videoService() {
         .select("*")       
     },
 
-    getUserVideos() {
+    getUserVideos(userEmail) {
       return supabase.from("video")
-        .select("*") 
-        .filter("userId", "is", null)       
+        .select("*")
+        .eq('userEmail', userEmail)  
+   
     },
 
-    insertVideo(title, url, playlist){
+    insertVideo(title, url, playlist, userEmail){
       return supabase.from("video").insert({
         title,
         url,
         thumb: getThumbnail(url),
         playlist: playlist.toUpperCase(),
+        userEmail
     })
     }
   }

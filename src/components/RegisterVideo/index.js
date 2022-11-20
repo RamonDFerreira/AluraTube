@@ -3,6 +3,7 @@ import { videoService } from "../../services/videoService";
 import { StyledRegisterVideo } from "./styles";
 import { useForm } from "react-hook-form";
 import { Alert } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 // Whiteboarding
 // Custom Hook
@@ -17,7 +18,7 @@ export default function RegisterVideo() {
         defaultValues: {
             titulo: "",
             url: "",
-            playlist: ""
+            playlist: ""           
         }
     });
 
@@ -27,6 +28,7 @@ export default function RegisterVideo() {
       
     const [formVisivel, setFormVisivel] = React.useState(false);
     const service = videoService();
+    const {data: session} = useSession()
 
     return (
         <StyledRegisterVideo>
@@ -37,11 +39,10 @@ export default function RegisterVideo() {
             {/* Operadores de Curto-circuito */}
             {formVisivel && (
                 <form onSubmit={handleSubmit((data) => {
-   
-                    console.log(data)
-                    service.insertVideo(data.titulo, data.url, data.playlist)
-                        .then((data) => {
-                            console.log(data)
+
+                    service.insertVideo(data.titulo, data.url, data.playlist, session.user?.email)
+                        .then(() => {
+                            
                         })
                         .catch((error) => {
                             console.log(error)
