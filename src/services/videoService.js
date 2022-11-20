@@ -16,11 +16,11 @@ export function videoService() {
         .select("*")       
     },
 
-    getUserVideos(userEmail) {
-      return supabase.from("video")
+    async getUserVideos(userEmail) {
+      const videos = await supabase.from("video")
         .select("*")
         .eq('userEmail', userEmail)  
-   
+      return videos
     },
 
     insertVideo(title, url, playlist, userEmail){
