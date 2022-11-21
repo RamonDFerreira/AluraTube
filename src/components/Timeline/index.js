@@ -1,14 +1,30 @@
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { videoService } from "../../services/videoService";
 import { StyledTimeline } from "./styles";
 
 
-export default function Timeline({searchValue, ...propriedades}) {
+export default function Timeline({searchValue, playlists, setPlaylists}) {
 
-    const playlistNames = Object.keys(propriedades.playlists);
+    const service = videoService();
+    const { data: session } = useSession()
+    const userEmail = session.user?.email 
+    const playlistNames = Object.keys(playlists);
+    
+    const fetchVideos = async () => { 
+        console.log(userEmail)
+        const userVideos = await service.getUserVideos(userEmail)
+        setPlaylists(userVideos)    
+    }
 
+    useEffect(() => {
+        fetchVideos() 
+    }, [])
+    
     return (
         <StyledTimeline>
             {playlistNames.map((playlistName) => {
-                const videos = propriedades.playlists[playlistName];
+                const videos = playlists[playlistName];
                 return (
                     <section key={playlistName}>
                         <h2>{playlistName}</h2>

@@ -3,7 +3,6 @@ import {SessionProvider} from 'next-auth/react'
 import { ThemeProvider } from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import ColorModeProvider, { ColorModeContext } from "../src/components/Menu/components/ColorMode";
-import RegisterVideo from "../src/components/RegisterVideo";
 
 const theme = {
     light: {
@@ -35,22 +34,22 @@ function ProviderWrapper(props) {
 }
 
 function MyApp({ Component, pageProps }) {
+
     const contexto = React.useContext(ColorModeContext);
     return (
-        <ThemeProvider theme={theme[contexto.mode]}>
-            <CSSReset />
-            <Component {...pageProps} />
-            <RegisterVideo />
-        </ThemeProvider>
+        <SessionProvider session={pageProps.session}>
+            <ThemeProvider theme={theme[contexto.mode]}>
+                <CSSReset />
+                <Component {...pageProps} />
+            </ThemeProvider>
+        </SessionProvider>
     )
 }
 
-export default function _App(props, session) {
+export default function _App(props) {
     return (
-        <SessionProvider session={session}>
-            <ProviderWrapper>
-                <MyApp {...props} />
-            </ProviderWrapper>
-        </SessionProvider>
+        <ProviderWrapper>
+            <MyApp {...props} />
+        </ProviderWrapper>
     )
 };

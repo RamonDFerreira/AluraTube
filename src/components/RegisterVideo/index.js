@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 // Whiteboarding
 // Custom Hook
 
-export default function RegisterVideo() {
+export default function RegisterVideo({playlists, setPlaylists}) {
     const { 
         register, 
         handleSubmit, 
@@ -29,7 +29,7 @@ export default function RegisterVideo() {
     const [formVisivel, setFormVisivel] = React.useState(false);
     const service = videoService();
     const {data: session} = useSession()
-
+    const userEmail = session.user.email
     return (
         <StyledRegisterVideo>
             <button className="add-video" onClick={() => setFormVisivel(true)}>
@@ -40,14 +40,16 @@ export default function RegisterVideo() {
             {formVisivel && (
                 <form onSubmit={handleSubmit((data) => {
 
-                    service.insertVideo(data.titulo, data.url, data.playlist, session.user?.email)
-                        .then(() => {
-                            
+                    service.insertVideo(data.titulo, data.url, data.playlist, userEmail)
+                        .then(async () => {
+                            const userVideos = await service.getUserVideos(userEmail)
+                            setPlaylists(userVideos) 
                         })
                         .catch((error) => {
                             console.log(error)
                         })
 
+                    
                     setFormVisivel(false);
                 })}>
                     <div>

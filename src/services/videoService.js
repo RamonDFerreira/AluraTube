@@ -11,20 +11,20 @@ function getThumbnail(url) {
 
 export function videoService() {
   return {
-    getAllVideos() {
-      return supabase.from("video")
+    async getAllVideos() {
+      return await supabase.from("video")
         .select("*")       
     },
 
     async getUserVideos(userEmail) {
-      const videos = await supabase.from("video")
-        .select("*")
+      const {data} = await supabase.from("video") 
+        .select()
         .eq('userEmail', userEmail)  
-      return videos
+      return {data} 
     },
 
-    insertVideo(title, url, playlist, userEmail){
-      return supabase.from("video").insert({
+    async insertVideo(title, url, playlist, userEmail){
+      return await supabase.from("video").insert({
         title,
         url,
         thumb: getThumbnail(url),
