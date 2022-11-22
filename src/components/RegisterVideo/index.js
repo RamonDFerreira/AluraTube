@@ -40,7 +40,7 @@ export default function RegisterVideo({playlists, setPlaylists}) {
             {formVisivel && (
                 <form onSubmit={handleSubmit((data) => {
 
-                    service.insertVideo(data.titulo, data.url, data.playlist, userEmail)
+                    service.insertVideo(data.url, data.playlist, userEmail)
                         .then(async () => {
                             const userVideos = await service.getUserVideos(userEmail)
                             setPlaylists(userVideos) 
@@ -56,15 +56,6 @@ export default function RegisterVideo({playlists, setPlaylists}) {
                         <button type="button" className="close-modal" onClick={() => setFormVisivel(false)}>
                             X
                         </button>
-                        <input
-                            placeholder="Titulo do vídeo"
-                            {...register(
-                                "titulo",
-                                { required: <Alert severity="error">Favor informar o titulo do vídeo.</Alert> }
-                            )
-                            }
-                        />
-                        <span>{errors.titulo?.message}</span>
                         <input
                             placeholder="URL"
                             {...register(

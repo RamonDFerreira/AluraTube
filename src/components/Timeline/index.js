@@ -35,12 +35,16 @@ export default function Timeline({searchValue, playlists, setPlaylists}) {
                                 return titleNormalized.includes(searchValueNormalized)
                             }).map((video) => {
                                 return (
-                                    <a key={video.url} href={video.url}>
-                                        <img src={video.thumb} />
-                                        <span>
-                                            {video.title}
-                                        </span>
-                                    </a>
+                                    <>
+                                        <a key={video.url} href={video.url}>
+                                            <img src={video.thumb} />
+                                            <span>
+                                                {video.title}
+                                            </span>                                       
+                                        </a>     
+                                        <button onClick={() => {service.removeVideo(video.url, userEmail)}}>Remove</button>
+                                    </>
+                                          
                                 )
                             })}
                         </div>

@@ -23,14 +23,35 @@ export function videoService() {
       return {data} 
     },
 
-    async insertVideo(title, url, playlist, userEmail){
-      return await supabase.from("video").insert({
+    async insertVideo(url, playlist, userEmail){
+
+      const title = await fetch(`https://noembed.com/embed?dataType=json&url=${url}`)
+        .then(res => res.json())
+        .then(data => {return data.title})
+
+
+      const { video, error } = await supabase.from("video").insert({
         title,
         url,
         thumb: getThumbnail(url),
         playlist: playlist.toUpperCase(),
         userEmail
-    })
+      })
+
+      if (error) console.log(error)
+
+      return video
+    },
+
+    async removeVideo(url, userEmail){
+      const { video, error } = await supabase.from("video").delete().match({
+        url,
+        userEmail
+      })
+
+      if (error) console.log(error)
+
+      return video
     }
   }
 }
