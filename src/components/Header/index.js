@@ -1,21 +1,20 @@
+import { useSession } from 'next-auth/react';
 import config from '../../../config.json'
 import { StyledHeader, StyledBanner } from "./styles";
 
 export function Header() {
-  return (
-    <StyledHeader>
-        <StyledBanner bg={config.bg} />
-        <section className="user-info">
-            <img src={`https://github.com/${config.github}.png`} />
-            <div>
-                <h2>
-                    {config.name}
-                </h2>
-                <p>
-                    {config.job}
-                </p>
-            </div>
-        </section>
-    </StyledHeader>
-)
+    const { data: session } = useSession()
+    return (
+        <StyledHeader>
+            <StyledBanner bg={config.bg} />
+            <section className="user-info">
+                <img src={session.user.image} />
+                <div>
+                    <h2>
+                        {session.user.name.toUpperCase()}
+                    </h2>
+                </div>
+            </section>
+        </StyledHeader>
+    )
 }
