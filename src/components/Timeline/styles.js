@@ -15,7 +15,7 @@ export const StyledTimeline = styled.div`
     font-weight: 500;
     object-fit: cover;
     width: 100%;
-    max-width: 210px;
+    max-width: 300px;
     height: auto;
   }
   section {
@@ -23,7 +23,7 @@ export const StyledTimeline = styled.div`
     padding: 0;
     overflow: hidden;
     padding: 16px;
-    div {
+    .carrousel {
       width: calc(100vw - 16px * 4);
       display: grid;
       grid-row: 2;
@@ -50,6 +50,16 @@ export const StyledTimeline = styled.div`
           padding-right: 24px;
           margin-bottom: 8px;
           color: ${({ theme }) => theme.textColorBase || "#222222"};
+        }
+        .thumbnail {
+          position: relative;
+          svg {
+            position: absolute;
+            top: 2%;
+            right: 3%;
+            border: 0;
+            background-color: transparent;
+          }
         }
       }
     }

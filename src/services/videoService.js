@@ -50,7 +50,7 @@ export function videoService() {
       })
 
       if (error) console.log(error)
-
+      
       return video
     }
   }
