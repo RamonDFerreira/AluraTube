@@ -19,6 +19,7 @@ export const StyledHeader = styled.div`
 export const StyledBanner = styled.div`
     background-color: gray;
     background-image: url(${({bg}) => bg});
+    background-size: cover;
     height: 230px;
 
 `;

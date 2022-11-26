@@ -1,75 +1,42 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { videoService } from "../../services/videoService";
 import { StyledTimeline } from "./styles";
 import { BsTrash } from "react-icons/bs"
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Button } from "@mui/material";
+import { videoService } from "../../services/videoService";
+import RemoveDialog from "../RemoveDialog";
+
 
 export default function Timeline({searchValue, playlists, setPlaylists}) {
 
-    const service = videoService();
+    const [urlVideoSelecionado, setUrlVideoSelecionado] = useState('');
     const { data: session } = useSession()
+    const service = videoService();
     const userEmail = session.user?.email 
     const playlistNames = Object.keys(playlists);
+    const [open, setOpen] = useState(false);
     
     const fetchVideos = async () => { 
         console.log(userEmail)
         const userVideos = await service.getUserVideos(userEmail)
         setPlaylists(userVideos)    
     }
-    const [urlVideoSelecionado, setUrlVideoSelecionado] = useState('');
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-  
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     useEffect(() => {
         fetchVideos() 
     }, [])
-    
-    async function excluirVideo(url, userEmail){
-        await service.removeVideo(url, userEmail)
-        fetchVideos()
-        setOpen(false);
-    }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
     return (
         <StyledTimeline>
+            <RemoveDialog isOpen={open} handleCloseDialog={() => setOpen(false)} url={urlVideoSelecionado} userEmail={userEmail} setPlaylists={setPlaylists}/>              
             {playlistNames.map((playlistName) => {
                 const videos = playlists[playlistName];
                 return ( 
                     <section key={playlistName}>
-                        <Dialog
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                        >
-                            <DialogTitle id="alert-dialog-title">
-                            {"Excluir"}
-                            </DialogTitle>
-                            <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Tem certeza que deseja excluir o vídeo?
-                            </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                            <Button onClick={handleClose}>Cancelar</Button>
-                            <Button onClick={() => excluirVideo(urlVideoSelecionado, userEmail)} autoFocus>
-                                Excluir
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
+                        
                         <h2>{playlistName}</h2>
                         <div className="carrousel">
                             {videos.filter((video) => {
@@ -86,7 +53,7 @@ export default function Timeline({searchValue, playlists, setPlaylists}) {
                                                 setUrlVideoSelecionado(video.url)
                                                 handleClickOpen()
                                             }}> Remover 
-                                            </BsTrash> 
+                                            </BsTrash>
                                         </div>
                                         <span>
                                             {video.title}

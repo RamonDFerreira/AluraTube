@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { videoService } from "../src/services/videoService";
+import { useState } from "react";
 import { getSession, useSession } from 'next-auth/react'
 import Menu from "../src/components/Menu";
 import IndexPage from "../src/components/Head";

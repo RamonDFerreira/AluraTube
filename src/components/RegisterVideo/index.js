@@ -1,7 +1,7 @@
 import React from "react";
 import { videoService } from "../../services/videoService";
 import { StyledRegisterVideo } from "./styles";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Alert } from "@mui/material";
 import { useSession } from "next-auth/react";
 
@@ -12,13 +12,14 @@ export default function RegisterVideo({playlists, setPlaylists}) {
     const { 
         register, 
         handleSubmit, 
+        watch,
         reset,
         formState: { errors, isSubmitSuccessful } 
     } = useForm({
         defaultValues: {
             titulo: "",
             url: "",
-            playlist: ""           
+            playlist: "",           
         }
     });
 
@@ -27,9 +28,22 @@ export default function RegisterVideo({playlists, setPlaylists}) {
     }, [isSubmitSuccessful])
       
     const [formVisivel, setFormVisivel] = React.useState(false);
+    const [thumbVideo, setThumbVideo] = React.useState('');
+    const [titulo, setTitulo] = React.useState('');
     const service = videoService();
     const {data: session} = useSession()
     const userEmail = session.user.email
+
+    formVisivel && watch(async (data) => {
+        try {
+            setTitulo(await service.getTitle(data.url))
+            setThumbVideo(await service.getThumbnail(data.url))
+        } catch {
+            setTitulo('')
+            setThumbVideo('')
+        }
+    })
+
     return (
         <StyledRegisterVideo>
             <button className="add-video" onClick={() => setFormVisivel(true)}>
@@ -40,8 +54,8 @@ export default function RegisterVideo({playlists, setPlaylists}) {
             {formVisivel && (
                 <form onSubmit={handleSubmit((data) => {
 
-                    service.insertVideo(data.url, data.playlist, userEmail)
-                        .then(async () => {
+                    service.insertVideo(data.url, data.playlist, userEmail, titulo, thumbVideo)
+                        .then(async () => {                           
                             const userVideos = await service.getUserVideos(userEmail)
                             setPlaylists(userVideos) 
                         })
@@ -77,6 +91,8 @@ export default function RegisterVideo({playlists, setPlaylists}) {
                         <button type="submit">
                             Cadastrar
                         </button>
+                        <img src={thumbVideo} alt="" />
+                        <span>{titulo}</span>
                     </div>
                 </form>
             )}

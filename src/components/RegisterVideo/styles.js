@@ -58,6 +58,10 @@ export const StyledRegisterVideo = styled.div`
       & > span {
         margin-bottom: 5px;
       }
+
+      & > img {
+        margin: 2rem 0 0.75rem;
+      }
     }
   }
   input {
