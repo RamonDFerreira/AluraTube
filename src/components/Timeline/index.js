@@ -12,11 +12,10 @@ export default function Timeline({searchValue, playlists, setPlaylists}) {
     const { data: session } = useSession()
     const service = videoService();
     const userEmail = session.user?.email 
-    const playlistNames = Object.keys(playlists);
+    const playlistNames = Object.keys(playlists)
     const [open, setOpen] = useState(false);
     
     const fetchVideos = async () => { 
-        console.log(userEmail)
         const userVideos = await service.getUserVideos(userEmail)
         setPlaylists(userVideos)    
     }
@@ -31,12 +30,19 @@ export default function Timeline({searchValue, playlists, setPlaylists}) {
 
     return (
         <StyledTimeline>
-            <RemoveDialog isOpen={open} handleCloseDialog={() => setOpen(false)} url={urlVideoSelecionado} userEmail={userEmail} setPlaylists={setPlaylists}/>              
+            <RemoveDialog isOpen={open} handleCloseDialog={() => setOpen(false)} url={urlVideoSelecionado} userEmail={userEmail} setPlaylists={setPlaylists}/>            
             {playlistNames.map((playlistName) => {
                 const videos = playlists[playlistName];
+                const playlistVideos = () => {
+                    const playlistVideoNames = new Set();
+                    videos.map((video) => {
+                        playlistVideoNames.add(video.playlist)
+                    })
+                    return playlistVideoNames
+                }
+                playlistVideos()
                 return ( 
                     <section key={playlistName}>
-                        
                         <h2>{playlistName}</h2>
                         <div className="carrousel">
                             {videos.filter((video) => {

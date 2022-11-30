@@ -1,5 +1,7 @@
 import React from 'react'
 import {useSession, signIn, signOut, getSession} from 'next-auth/react'
+import FormLogin from '../src/components/Login/FormLogin'
+import BackgroundLogin from '../src/components/Login/BackgroundLogin'
 
 const login = () => {
     const {data: session} = useSession()
@@ -8,20 +10,13 @@ const login = () => {
         signIn('google', {callbackUrl: process.env.NEXTAUTH_URL})       
     }
 
-    if(session) {
+    if(!session) {
         return(
-            <div>
-                <p>Welcome, {session.user?.email}</p>
-                <img src={session.user?.image} style={{borderRadius: '50px'}} />
-                <button onClick={() => signOut()}>SignOut</button>
-            </div>
-        )
-    } else {
-        return(
-            <div>
-                <p>You are not signed in</p>
-                <button onClick={handleGoogleSignIn}>SignIn</button>
-            </div>
+            <>
+                <BackgroundLogin />
+                <FormLogin handleGoogleSignIn={handleGoogleSignIn}/>
+            </>
+            
         ) 
     }
 }

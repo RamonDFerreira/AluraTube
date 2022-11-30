@@ -15,12 +15,12 @@ export function videoService() {
       const {data} = await supabase.from("video") 
         .select()
         .eq('userEmail', userEmail)  
-      return {data} 
+      return { data }
     },
 
     //get youtube thumbnail from video url 
     async getThumbnail(url) {
-      return `https://img.youtube.com/vi/${url.split("v=")[1]}/hqdefault.jpg`;
+      return `https://img.youtube.com/vi/${url.split(/[v]?[=&]/)[1]}/hqdefault.jpg`;
     },
 
     async getTitle(url){
